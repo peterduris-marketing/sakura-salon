@@ -692,13 +692,14 @@ legend{padding:0;font-weight:500;font-size:1.0625rem;margin-bottom:10px}
 </div>
 
 <script>
-// Meranie len so súhlasom: Meta pixel 165776395593432 a GA4 G-TV95L9CTXF sa načítajú až po „Súhlasím“.
+// Meranie len so súhlasom, načíta sa až po „Súhlasím“. Pixel 426808031752134 patrí reklamnému účtu act_1440043449465161
+// (na ňom sa učí kampaň), 165776395593432 je pixel e-shopu. GA4 G-TV95L9CTXF.
 (function(){
-  var PIXEL = '165776395593432', GA4 = 'G-TV95L9CTXF', KLUC = 'sakura_suhlas';
+  var PIXELY = ['426808031752134', '165776395593432'], GA4 = 'G-TV95L9CTXF', KLUC = 'sakura_suhlas';
   window.zmeraj = function(){};
   function nacitaj(){
     !function(f,b,e,v,n,t,s){if(f.fbq)return;n=f.fbq=function(){n.callMethod?n.callMethod.apply(n,arguments):n.queue.push(arguments)};if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';n.queue=[];t=b.createElement(e);t.async=!0;t.src=v;s=b.getElementsByTagName(e)[0];s.parentNode.insertBefore(t,s)}(window,document,'script','https://connect.facebook.net/en_US/fbevents.js');
-    fbq('init', PIXEL); fbq('track', 'PageView');
+    PIXELY.forEach(function(id){ fbq('init', id); }); fbq('track', 'PageView');
     var g = document.createElement('script'); g.async = true; g.src = 'https://www.googletagmanager.com/gtag/js?id=' + GA4; document.head.appendChild(g);
     window.dataLayer = window.dataLayer || []; window.gtag = function(){ dataLayer.push(arguments); };
     gtag('js', new Date()); gtag('config', GA4);
@@ -708,6 +709,10 @@ legend{padding:0;font-weight:500;font-size:1.0625rem;margin-bottom:10px}
       else if(udalost === 'klik_sms'){ fbq('track', 'Contact', {sposob:'sms'}); gtag('event', 'klik_sms'); }
     };
   }
+  // Novembrový bonus (maska na ruky, 5 % na Sensu) platí do 30. 11. 2026, potom sa skryje sám.
+  var bonus = document.querySelector('.mesiac');
+  if(bonus && new Date() >= new Date(2026, 11, 1)) bonus.hidden = true;
+
   var lista = document.getElementById('suhlas'), stav = null;
   try { stav = localStorage.getItem(KLUC); } catch(e){}
   if(stav === 'ano') nacitaj(); else if(stav !== 'nie') lista.hidden = false;
